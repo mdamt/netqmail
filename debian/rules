@@ -104,7 +104,7 @@ install-indep: deb-checkdir deb-checkuid
 binary: binary-indep binary-arch
 binary-arch: install-arch qmail.deb
 	dpkg-shlibdeps '$(DIR)'/usr/bin/* '$(DIR)'/usr/sbin/*
-	dpkg-gencontrol -isp -pqmail -P'$(DIR)'
+	dpkg-gencontrol -isp -psurelia-qmail -P'$(DIR)'
 	dpkg -b '$(DIR)' ..
 binary-indep: install-indep surelia-qmail-uids-gids.deb
 	dpkg-gencontrol -isp -psurelia-qmail-uids-gids -P'$(BASEDIR)'/surelia-qmail-uids-gids

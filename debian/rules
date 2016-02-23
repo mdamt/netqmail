@@ -5,7 +5,8 @@ ifneq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
   STRIP =: nostrip
 endif
 
-DIR=$(shell pwd)/debian/qmail
+BASEDIR=$(shell pwd)/debian
+DIR=$(BASEDIR)/qmail
 
 patch: deb-checkdir patch-stamp
 patch-stamp:
@@ -96,8 +97,8 @@ install-arch: deb-checkdir deb-checkuid build-stamp
 	rm -f changelog && ln -s CHANGES changelog
 install-indep: deb-checkdir deb-checkuid
 	# qmail-uids-gids
-	rm -rf surelia-'$(DIR)'-uids-gids
-	install -d -m0755 surelia-'$(DIR)'-uids-gids
+	rm -rf '$(BASEDIR)'/surelia-qmail-uids-gids
+	install -d -m0755 '$(BASEDIR)'/surelia-qmail-uids-gids
 	rm -f changelog && ln -s CHANGES changelog
 
 binary: binary-indep binary-arch

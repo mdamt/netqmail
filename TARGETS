@@ -154,7 +154,6 @@ auto-uid.o
 auto-uid
 auto-gid.o
 auto-gid
-auto_uids.c
 auto_uids.o
 qmail-lspawn
 qmail-getpw.o

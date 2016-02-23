@@ -1,15 +1,17 @@
-Source: netqmail
+Source: surelia-netqmail
 Section: mail
 Priority: extra
-Maintainer: Gerrit Pape <pape@smarden.org>
-Build-Depends: qmail-uids-gids (>> 1.06), groff-base
+Maintainer: Mohammad Anwari mdamt@mdamt.net>
+Build-Depends: groff-base
 Standards-Version: 3.9.3.1
 
-Package: qmail
+Package: surelia-qmail
 Architecture: any
-Depends: ${shlibs:Depends}, qmail-uids-gids (>> 1.06)
+Depends: ${shlibs:Depends}, surelia-qmail-uids-gids
 Recommends: qmail-run (>= 2.0.0)
 Suggests: fastforward, dot-forward, qmail-tools
+Conflicts: qmail
+Replaces: qmail
 Description: a secure, reliable, efficient, simple message transfer agent
  qmail is meant as a replacement for the entire sendmail-binmail system on
  typical Internet-connected UNIX hosts.
@@ -19,8 +21,10 @@ Description: a secure, reliable, efficient, simple message transfer agent
  It is derived from Daniel Bernstein's qmail-1.03 plus bug fixes,
  a few feature enhancements, and some documentation.
 
-Package: qmail-uids-gids
+Package: surelia-qmail-uids-gids
 Architecture: all
 Depends: passwd, adduser
+Conflicts: qmail-uids-gids
+Replaces: qmail-uids-gids
 Description: user ids and group ids for qmail
  This package is mandatory for building and running the qmail package.

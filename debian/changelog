@@ -1,3 +1,9 @@
+surelia-netqmail (1.0) UNRELEASED; urgency=medium
+
+  * Forked from netqmail 
+
+ --  <mdamt@mdamt.net>  Tue, 23 Feb 2016 05:21:02 +0000
+
 netqmail (1.06-5) unstable; urgency=low
 
   * debian/qmail.postrm: do not forcefully remove files in /etc/qmail/

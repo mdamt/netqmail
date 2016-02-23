@@ -105,8 +105,8 @@ binary-arch: install-arch qmail.deb
 	dpkg-shlibdeps '$(DIR)'/usr/bin/* '$(DIR)'/usr/sbin/*
 	dpkg-gencontrol -isp -pqmail -P'$(DIR)'
 	dpkg -b '$(DIR)' ..
-binary-indep: install-indep qmail-uids-gids.deb
-	dpkg-gencontrol -isp -pqmail-uids-gids -P'$(DIR)'-uids-gids
+binary-indep: install-indep surelia-qmail-uids-gids.deb
+	dpkg-gencontrol -isp -psurelia-qmail-uids-gids -P'$(DIR)'-uids-gids
 	dpkg -b '$(DIR)'-uids-gids ..
 
 .PHONY: patch build clean install binary-indep binary-arch binary

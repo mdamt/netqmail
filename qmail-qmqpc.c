@@ -18,7 +18,7 @@
 #include "control.h"
 #include "fmt.h"
 
-#define PORT_QMQP 628
+#define PORT_QMQP 10628
 
 void die_success() { _exit(0); }
 void die_perm() { _exit(31); }

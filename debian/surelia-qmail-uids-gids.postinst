@@ -44,7 +44,7 @@ add_usersgroups () {
   DEBUG=$*
 
   $DEBUG groupadd -g 64010 qmail || return 1
-  $DEBUG addgroup --system nofiles || return 1
+  $DEBUG groupadd -g 64000 nofiles || return 1
   $DEBUG useradd -u 64010 -g nofiles -d /var/lib/qmail/alias alias || return 1
   $DEBUG useradd -u 64011 -g nofiles -d /var/lib/qmail qmaild || return 1
   $DEBUG useradd -u 64015 -g nofiles -d /var/lib/qmail qmaill || return 1
@@ -92,9 +92,8 @@ qmaill:x:64015:XXXXX:qmail log:/var/lib/qmail:/bin/sh
 qmailp:x:64016:XXXXX:qmail pw:/var/lib/qmail:/bin/sh
 /etc/group:
 qmail:x:64010:
-nofiles:x:XXXXX:
+nofiles:x:64000:
 
-Where XXXXX is an abritary system group id for the 'nofiles' group.
 
 Installation aborted.
 
@@ -122,6 +121,7 @@ if test "$RC" -eq 1; then
   for i in 64010 64011 64012 64013 64014 64015 64016; do
     check_uid $i || stopinst
   done
+  check_gid 64000 || stopinst
   check_gid 64010 || stopinst
   cat <<EOT
 No qmail-users or -groups found.

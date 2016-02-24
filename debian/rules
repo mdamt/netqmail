@@ -106,12 +106,17 @@ install-arch: deb-checkdir deb-checkuid build-stamp
 	install -d -m0755 '$(RELAY_ONLY_DIR)'/usr/lib/qmail/bin
 	install -d -m0755 '$(RELAY_ONLY_DIR)'/var/lib/qmail
 	install -d -m0755 '$(RELAY_ONLY_DIR)'/var/lib/qmail/bin
+	ln -s /etc/qmail '$(RELAY_ONLY_DIR)'/var/lib/qmail/control
 	for i in qmail-qmqpc qmail-smtpd;do \
 	  cp '$(DIR)'/usr/sbin/$$i '$(RELAY_ONLY_DIR)'/usr/sbin; \
 	  ln -s /usr/sbin/$$i '$(RELAY_ONLY_DIR)'/var/lib/qmail/bin/$$i; \
 	done
 	ln -s /usr/sbin/qmail-qmqpc '$(RELAY_ONLY_DIR)'/var/lib/qmail/bin/qmail-queue
 	ln -s /usr/sbin/qmail-qmqpc '$(RELAY_ONLY_DIR)'/usr/sbin/qmail-queue
+	mkdir -p '$(RELAY_ONLY_DIR)'/etc/qmail/service/smtpd
+	mkdir -p '$(RELAY_ONLY_DIR)'/etc/systemd/system/
+	cp '$(BASEDIR)'/scripts/surelia-qmail-relay-only/smtpd/* '$(RELAY_ONLY_DIR)'/etc/qmail/service/smtpd
+	cp '$(BASEDIR)'/scripts/surelia-qmail-relay-only/surelia-smtpd.service '$(RELAY_ONLY_DIR)'/etc/systemd/system/
 
 install-indep: deb-checkdir deb-checkuid
 	# qmail-uids-gids

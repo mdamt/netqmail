@@ -23,7 +23,7 @@ Description: a secure, reliable, efficient, simple message transfer agent
 
 Package: surelia-qmail-relay-only
 Architecture: any
-Depends: ${shlibs:Depends}, surelia-qmail-uids-gids
+Depends: ${shlibs:Depends}, surelia-qmail-uids-gids, ucspi-tcp, daemontools
 Recommends: qmail-run (>= 2.0.0)
 Suggests: fastforward, dot-forward, qmail-tools
 Conflicts: qmail, surelia-qmail

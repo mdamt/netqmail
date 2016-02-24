@@ -1,0 +1,13 @@
+[Unit]
+Description=Surelia SMTP relay only server
+After=network.target auditd.service
+
+[Service]
+ExecStart=/usr/bin/supervise /etc/qmail/service/smtpd
+ExecReload=svc -h /etc/qmail/service/smtpd/
+KillMode=process
+Restart=on-failure
+
+[Install]
+Alias=smtp.service
+

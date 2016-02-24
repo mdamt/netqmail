@@ -1,0 +1,19 @@
+#!/bin/sh
+
+QMAILDUID=`id -u qmaild`
+NOFILESGID=`id -g qmaild`
+MAXSMTPD=`cat /var/lib/qmail/control/concurrencyincoming`
+LOCAL=`head -1 /var/lib/qmail/control/me`
+
+
+if [ ! -f /etc/qmail/rcpthosts ]; then
+    echo "No /etc/qmail/rcpthosts!"
+    echo "Refusing to start SMTP listener because it'll create an open relay"
+    exit 1
+fi
+
+tcprules /etc/qmail/tcp.smtp.cdb /tmp/tcp.smtp < /etc/qmail/tcp.smtp
+
+exec softlimit -m 7000000 \
+    tcpserver -v -R -l "$LOCAL" -x /etc/qmail/tcp.smtp.cdb -c "$MAXSMTPD" \
+        -u "$QMAILDUID" -g "$NOFILESGID" 0 smtp rblsmtpd -r zombie.dnsbl.sorbs.net -r relays.ordb.org qmail-smtpd 2>&1

@@ -20,6 +20,8 @@ config() {
   echo "$HN" |grep -F . >/dev/null || stopinst "$HN"
   echo "$HN" > /etc/qmail/me
   echo "$HN" > /etc/qmail/rcpthosts
+  echo "50" > /etc/qmail/concurrencyincoming
+  echo ":allow" > /etc/qmail/tcp.smtp
   echo "put-your-gateway-ip-address-here-in-etc-qmail-qmqpservers" > /etc/qmail/qmqpservers
 }
 

@@ -7,6 +7,7 @@ endif
 
 BASEDIR=$(shell pwd)/debian
 DIR=$(BASEDIR)/qmail
+RELAY_ONLY_DIR=$(BASEDIR)/surelia-qmail-relay-only
 
 patch: deb-checkdir patch-stamp
 patch-stamp:
@@ -28,7 +29,8 @@ clean: deb-checkdir deb-checkuid
 	test ! -e patch-stamp || \
 	  for i in `ls -1r debian/diff/*.diff || :`; do patch -p1 -R <$$i; done
 	rm -f build-stamp patch-stamp
-	rm -rf '$(DIR)' '$(DIR)'-uids-gids
+	rm -rf '$(DIR)' '$(BASEDIR)/surelia-qmail' '$(BASEDIR)'/surelia-qmail-uids-gids '$(BASEDIR)'/surelia-qmail-relay-only
+
 	rm -f debian/files debian/substvars changelog
 
 install: install-arch install-indep
@@ -95,6 +97,22 @@ install-arch: deb-checkdir deb-checkuid build-stamp
 	gzip -9 '$(DIR)'/usr/share/man/man?/*
 	# changelog
 	rm -f changelog && ln -s CHANGES changelog
+	# surelia -qmail
+	cp -a '$(DIR)' '$(BASEDIR)'/surelia-qmail
+	# qmail-relay-only
+	install -d -m0755 '$(RELAY_ONLY_DIR)'/usr/bin
+	install -d -m0755 '$(RELAY_ONLY_DIR)'/usr/sbin
+	install -d -m0755 '$(RELAY_ONLY_DIR)'/etc/qmail
+	install -d -m0755 '$(RELAY_ONLY_DIR)'/usr/lib/qmail/bin
+	install -d -m0755 '$(RELAY_ONLY_DIR)'/var/lib/qmail
+	install -d -m0755 '$(RELAY_ONLY_DIR)'/var/lib/qmail/bin
+	for i in qmail-qmqpc qmail-smtpd;do \
+	  cp '$(DIR)'/usr/sbin/$$i '$(RELAY_ONLY_DIR)'/usr/sbin; \
+	  ln -s /usr/sbin/$$i '$(RELAY_ONLY_DIR)'/var/lib/qmail/bin/$$i; \
+	done
+	ln -s /usr/sbin/qmail-qmqpc '$(RELAY_ONLY_DIR)'/var/lib/qmail/bin/qmail-queue
+	ln -s /usr/sbin/qmail-qmqpc '$(RELAY_ONLY_DIR)'/usr/sbin/qmail-queue
+
 install-indep: deb-checkdir deb-checkuid
 	# qmail-uids-gids
 	rm -rf '$(BASEDIR)'/surelia-qmail-uids-gids
@@ -102,10 +120,13 @@ install-indep: deb-checkdir deb-checkuid
 	rm -f changelog && ln -s CHANGES changelog
 
 binary: binary-indep binary-arch
-binary-arch: install-arch qmail.deb
-	dpkg-shlibdeps '$(DIR)'/usr/bin/* '$(DIR)'/usr/sbin/*
-	dpkg-gencontrol -isp -psurelia-qmail -P'$(DIR)'
-	dpkg -b '$(DIR)' ..
+binary-arch: install-arch surelia-qmail.deb surelia-qmail-relay-only.deb
+	dpkg-shlibdeps '$(BASEDIR)'/surelia-qmail/usr/bin/* '$(BASEDIR)'/surelia-qmail/usr/sbin/*
+	dpkg-gencontrol -isp -psurelia-qmail -P'$(BASEDIR)'/surelia-qmail
+	dpkg -b '$(BASEDIR)'/surelia-qmail ..
+	dpkg-shlibdeps '$(RELAY_ONLY_DIR)'/usr/sbin/*
+	dpkg-gencontrol -isp -psurelia-qmail-relay-only -P'$(RELAY_ONLY_DIR)'
+	dpkg -b '$(RELAY_ONLY_DIR)' ..
 binary-indep: install-indep surelia-qmail-uids-gids.deb
 	dpkg-gencontrol -isp -psurelia-qmail-uids-gids -P'$(BASEDIR)'/surelia-qmail-uids-gids
 	dpkg -b '$(BASEDIR)'/surelia-qmail-uids-gids ..

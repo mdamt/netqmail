@@ -1,0 +1,38 @@
+#!/bin/sh
+set -e
+
+stopinst() {
+  cat <<-\EOT >&2
+	
+	The hostname -f command returned: $1
+	
+	Your system needs to have a fully qualified domain name (fqdn) in
+	order to install the var-qmail packages.
+	
+	Installation aborted.
+	
+	EOT
+  exit 1
+}
+
+config() {
+  HN="`hostname -f 2>&1`" || stopinst "$HN"
+  echo "$HN" |grep -F . >/dev/null || stopinst "$HN"
+  echo "$HN" > /etc/qmail/me
+  echo "$HN" > /etc/qmail/rcpthosts
+  echo "put-your-gateway-ip-address-here-in-etc-qmail-qmqpservers" > /etc/qmail/qmqpservers
+}
+
+test "$1" = 'configure' || exit 0
+
+if test -f /var/lib/qmail/control/me; then
+  cat <<-\EOT
+	You already have a '/var/lib/qmail/control/me', assuming that
+	qmail on your system is already configured.
+	EOT
+else
+  config
+fi
+
+
+
